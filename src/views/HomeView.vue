@@ -52,35 +52,36 @@ function initializeAttemptStatus() {
 
 // Add an attempt to the list of attempts
 function addAttempt() {
-  console.log('Attempt :', attemptWord.value.toLocaleUpperCase())
+  // If the word don't fit the size of the selected word
   if (attemptWord.value.length !== maxWordSize.value) {
     displayWarning('Word size is not correct')
     return
   }
-
+  // If the word doesn't exist in the wordlist
   if (!wordlist.includes(attemptWord.value.toLocaleUpperCase())) {
     displayWarning("Word doesn't exist. You lose!")
     partyLose.value = true
     return
   }
-
+  // If the word is the correct word
   if (updateAttemptStatus(selectedWord.value, attemptWord.value) === selectedWord.value) {
     displaySuccess('You win!')
     partyWin.value = true
     return
   }
-
+  // Add the attempt to the list of attempts
   const newAttempt = Array.from(attemptWord.value)
   wordsAttemptsList.value.unshift(newAttempt)
-
+  // If the number of attempts is greater than the number of allowed attempts
   if (wordsAttemptsList.value.length >= nbTrialsAllowed.value) {
     wordsAttemptsList.value.pop()
     displayError('You have reached the maximum number of trials. You lose!')
     partyLose.value = true
     return
   }
-
+  // Save the list in the store
   store.attempts = wordsAttemptsList.value
+  // Reset the attempt word 
   attemptWord.value = ''
 }
 
