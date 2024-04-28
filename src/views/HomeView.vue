@@ -52,12 +52,13 @@ function initializeAttemptStatus() {
 
 // Add an attempt to the list of attempts
 function addAttempt() {
+  console.log('Attempt :', attemptWord.value.toLocaleUpperCase())
   if (attemptWord.value.length !== maxWordSize.value) {
     displayWarning('Word size is not correct')
     return
   }
 
-  if (!wordlist.includes(attemptWord.value)) {
+  if (!wordlist.includes(attemptWord.value.toLocaleUpperCase())) {
     displayWarning("Word doesn't exist. You lose!")
     partyLose.value = true
     return
@@ -155,6 +156,7 @@ onUnmounted(() => {
           v-model="attemptWord"
           class="w-full uppercase tracking-widest border-none bg-zinc-100 px-5 py-2 placeholder-zinc-300 drop-shadow-xl transition-all duration-300 ease-in-out focus:bg-zinc-300 focus:text-zinc-900 focus:placeholder-zinc-500 focus:outline-none"
           :maxlength="maxWordSize"
+          @keyup.enter="addAttempt"
           :disabled="partyWin || partyLose"
         />
         <button @click="addAttempt" class="w-fit px-5 py-2 bg-zinc-200">Send</button>
@@ -162,7 +164,7 @@ onUnmounted(() => {
       <p v-else-if="partyWin" class="text-3xl text-green-500">You Win!</p>
       <p v-else-if="partyLose" class="text-3xl text-red-500">You Lose!</p>
       <p v-if="partyLose">The word was : {{ selectedWord }}</p>
-      <button @click="resetGame">Restart</button>
+      <button @click="resetGame" :class="partyLose ? 'font-semibold':''">Restart</button>
     </div>
     <GridWord
       v-if="wordsAttemptsList.length"
